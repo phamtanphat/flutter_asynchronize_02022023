@@ -52,7 +52,6 @@ class _DemoAsynchronizedWidgetState extends State<DemoAsynchronizedWidget> {
                       return Text("Waiting");
                     default:
                       return Text((snapshot.data ?? 0).toString());
-
                   }
               },
             ),

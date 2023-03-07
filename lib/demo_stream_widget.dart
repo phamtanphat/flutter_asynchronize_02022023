@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 class DemoStreamWidget extends StatefulWidget {
@@ -8,6 +11,8 @@ class DemoStreamWidget extends StatefulWidget {
 }
 
 class _DemoStreamWidgetState extends State<DemoStreamWidget> {
+
+  StreamController<int> streamController = StreamController();
 
   @override
   void didUpdateWidget(covariant DemoStreamWidget oldWidget) {
@@ -28,14 +33,28 @@ class _DemoStreamWidgetState extends State<DemoStreamWidget> {
     // });
     
     //3: Dung periodic
-    Stream<int> streamPeriodic = Stream.periodic(Duration(seconds: 1), (count) => count);
-    var subscription = streamPeriodic.listen((event) {
-      print(event);
-    });
+    // Stream<int> streamPeriodic = Stream.periodic(Duration(seconds: 1), (count) => count).asBroadcastStream();
+    //
+    // streamPeriodic.listen((event) {
+    //   print("Phase 1 $event");
+    // });
+    //
+    // streamPeriodic.listen((event) {
+    //   print("Phase 2 $event");
+    // });
 
-    Future.delayed(Duration(seconds: 5), () => subscription.pause(Future.delayed(Duration(seconds: 2), () {
-      subscription.resume();
-    })));
+    // 4: Them vao phat du lieu tu stream
+
+    // StreamController<int> streamControllerNumber = StreamController();
+    //
+    // streamControllerNumber.stream.transform(StreamTransformer.fromHandlers(handleData: (input, sink){
+    //   sink.add(input + 10);
+    // })).listen((event) {
+    //   print(event);
+    // });
+    //
+    // // them du lieu
+    // streamControllerNumber.sink.add(10);
   }
 
   @override
@@ -45,7 +64,39 @@ class _DemoStreamWidgetState extends State<DemoStreamWidget> {
           title: Text("Demo Async"),
         ),
         body: Container(
-
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                    onPressed: () {
+                      var random = Random();
+                      var number = random.nextInt(100);
+                      streamController.sink.add(number);
+                    },
+                    child: Text("Random")
+                ),
+                StreamBuilder(
+                    initialData: null,
+                    stream: streamController.stream,
+                    builder: (context, snapshot) {
+                      if (snapshot.hasError) {
+                        return Text(snapshot.error.toString());
+                      }
+                      switch(snapshot.connectionState) {
+                        case ConnectionState.none:
+                          return Text("None");
+                        case ConnectionState.waiting:
+                          return Text("Waiting");
+                        default:
+                          return Text((snapshot.data ?? 0).toString());
+                      }
+                    }
+                )
+              ],
+            ),
+          ),
         )
     );
   }
