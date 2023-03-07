@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 class DemoAsynchronizedWidget extends StatefulWidget {
@@ -11,21 +13,19 @@ class _DemoAsynchronizedWidgetState extends State<DemoAsynchronizedWidget> {
 
   @override
   void didUpdateWidget(covariant DemoAsynchronizedWidget oldWidget) {
-    int a = 5;
-    int b = 10;
-    cong(a, b)
-      .then((tong) => tru(tong, a))
-      .then((hieu) => cong(hieu, b))
-      .then((result) => print(result))
-      .catchError((error) => print(error));
+    handle()
+        .then((value) => print(value));
   }
 
-  Future<int> cong(int a, int b) {
-    return Future.delayed(Duration(seconds: 1), () => a + b);
-  }
-
-  Future<int> tru(int a, int b) {
-    return Future.delayed(Duration(seconds: 1), () => a - b);
+  Future<int> handle() {
+    Completer<int> completer = Completer();
+    Future.delayed(Duration(seconds: 2), () {
+      var number = 5;
+      Future.delayed(Duration(seconds: 2), () {
+        completer.complete(number + 2);
+      });
+    });
+    return completer.future;
   }
 
   @override
