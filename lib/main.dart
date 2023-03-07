@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_asynchronize_02022023/demo_asynchronized_widget.dart';
+import 'package:flutter_asynchronize_02022023/demo_stream_widget.dart';
 
 void main() {
   runApp(const MyApp());
@@ -16,7 +17,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: DemoAsynchronizedWidget(),
+      home: DemoStreamWidget()
     );
   }
 }
