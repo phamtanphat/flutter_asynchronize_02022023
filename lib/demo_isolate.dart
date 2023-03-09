@@ -1,4 +1,7 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'dart:isolate';
+
 class DemoIsolateWidget extends StatefulWidget {
   const DemoIsolateWidget({Key? key}) : super(key: key);
 
@@ -9,12 +12,17 @@ class DemoIsolateWidget extends StatefulWidget {
 class _DemoIsolateWidgetState extends State<DemoIsolateWidget> {
 
   void loop() {
-    Future.delayed(Duration(seconds: 1), () {
-      for (var i = 0; i < 10000000000; i++) {
-        print(i);
-      }
-    });
+    compute(handle, 10000000)
+        .then((value) => print(value));
   }
+
+  static int handle(num maxValue) {
+    for (var i = 0; i < maxValue; i++) {
+
+    }
+    return 100;
+  }
+
 
   @override
   Widget build(BuildContext context) {
