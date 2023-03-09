@@ -11,16 +11,29 @@ class DemoIsolateWidget extends StatefulWidget {
 
 class _DemoIsolateWidgetState extends State<DemoIsolateWidget> {
 
-  void loop() {
-    compute(handle, 10000000)
-        .then((value) => print(value));
+  void loop() async{
+    ReceivePort receivePort = ReceivePort();
+    ReceivePort errorPort = ReceivePort();
+    Isolate.spawn(handle, receivePort.sendPort, onError: receivePort.sendPort);
+
+    receivePort.listen((message) {
+      print(message);
+    });
+
+    errorPort.listen((message) {
+      print(message[0]);
+    }).onError((error) {
+      print(error);
+    });
+
   }
 
-  static int handle(num maxValue) {
-    for (var i = 0; i < maxValue; i++) {
-
+  static void handle(SendPort sendPort) {
+    var total = 0;
+    for (var i = 0; i < 100000000; i++) {
+      total += i;
     }
-    return 100;
+    throw Exception("error");
   }
 
 
