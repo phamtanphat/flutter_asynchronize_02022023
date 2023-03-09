@@ -84,14 +84,10 @@ class _DemoStreamWidgetState extends State<DemoStreamWidget> {
                       if (snapshot.hasError) {
                         return Text(snapshot.error.toString());
                       }
-                      switch(snapshot.connectionState) {
-                        case ConnectionState.none:
-                          return Text("None");
-                        case ConnectionState.waiting:
-                          return Text("Waiting");
-                        default:
-                          return Text((snapshot.data ?? 0).toString());
+                      if (snapshot.hasData) {
+                        return Text(snapshot.data.toString());
                       }
+                      return Text("");
                     }
                 )
               ],
